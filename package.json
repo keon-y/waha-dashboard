@@ -18,7 +18,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "tailwind": "npx @tailwindcss/cli -i ./src/css/input.css -o ./src/css/input.css --watch"
   },
   "eslintConfig": {
     "extends": [
