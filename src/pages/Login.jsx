@@ -9,7 +9,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
 
-  const {session, loginUser} = UserAuth();
+  const { loginUser } = UserAuth();
   let navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();

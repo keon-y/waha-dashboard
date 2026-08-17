@@ -1,9 +1,11 @@
 import React from 'react'
-
+import { UserAuth } from '../context/AuthContext'
 const Dashboard = () => {
+    const {session} = UserAuth();
 
+    console.log(session);
     return (
-        <div>Dashboard</div>
+        <div>Dashboard {session?.user?.email}</div>
     )
 }
 
