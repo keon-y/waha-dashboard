@@ -28,7 +28,7 @@ export function useRealtime(setData, tableName) {
           schema: 'public', 
           table: tableName 
         },
-        (payload) => { setData(sessionsAtuais => [...sessionsAtuais, payload.new]); }
+        (payload) => { loadData(); }
       )
       .subscribe();
 
