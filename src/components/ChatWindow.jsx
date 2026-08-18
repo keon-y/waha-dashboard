@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MessageBubble from './MessageBubble';
 import TakeoverButton from './TakeoverButton';
 
 export default function ChatWindow({ session, allMessages }) {
+
+    const [inputValue, setInputValue] = useState("");
+
+    const handleSendMessage = () => {
+
+    }
 
     const status_codes = {
         AGENTE: 0,
@@ -48,13 +54,38 @@ export default function ChatWindow({ session, allMessages }) {
                     text = { session.status == status_codes.AGENTE ? "Assumir controle" : "Devolver para IA"} 
                     newStatus = { session.status == status_codes.AGENTE ? status_codes.HUMANO : status_codes.AGENTE}/>
                 
-
-                <input
+                
+                <div className="flex gap-2 items-center">
+                    <input
                     type="text"
                     placeholder="Digite sua resposta..."
-                    disabled={session.status_message !== 'HUMANO'}
+                    disabled={session.status != status_codes.HUMANO}
+                    onChange={(e) => setInputValue(e.target.value)}
                     className="w-full bg-slate-100 border border-transparent focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-lg px-3 py-2 text-sm outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                />
+                    />
+                    {inputValue.trim() !== '' && (
+                        <button
+                        onClick={handleSendMessage}
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all shadow-sm animate-fade-in-right">
+                            <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            width="18" 
+                            height="18" 
+                            viewBox="0 0 24 24" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            strokeWidth="2" 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round"
+                        >
+                            <path d="m22 2-7 20-4-9-9-4Z"/>
+                            <path d="M22 2 11 13"/>
+                        </svg>
+                        </button> 
+                    )}
+
+                </div>
+                
             </div>
 
         </div>
