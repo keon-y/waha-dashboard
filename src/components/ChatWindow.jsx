@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import MessageBubble from './MessageBubble';
 import TakeoverButton from './TakeoverButton';
 import Textbox from './Textbox';
@@ -9,12 +9,28 @@ export default function ChatWindow({ session, allMessages }) {
     const status_codes = {
         AGENTE: 0,
         AGUARDANDO: 1,
-        HUMANO: 2
+        HUMANO: 2,
+        ARQUIVADA: 3
     }
 
     const chatMessages = allMessages.filter(
         (msg) => msg.chat_id === session.chat_id
     );
+
+    // Descer a tela para a mensagem mais recente
+    const scrollContainerRef = useRef(null);
+    const scrollToBottom = () => {
+    if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollTo({
+            top: scrollContainerRef.current.scrollHeight,
+            behavior: 'smooth'
+        });
+    }
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [chatMessages]);
 
     return (
         <div className="flex flex-col bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden h-full">
@@ -36,10 +52,11 @@ export default function ChatWindow({ session, allMessages }) {
             </div>
 
             {/* Corpo das Mensagens */}
-            <div className="flex-1 p-4 overflow-y-auto bg-slate-50 flex flex-col gap-3">
+            <div className="flex-1 p-4 overflow-y-auto bg-slate-50 flex flex-col gap-3 mt-auto" ref={scrollContainerRef}>
                 {chatMessages.map((msg, index) => (
                     <MessageBubble key={index} message={msg} />
                 ))}
+                
             </div>
 
             {/* Rodapé: Input e Botões */}
