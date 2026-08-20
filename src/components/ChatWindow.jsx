@@ -46,7 +46,7 @@ export default function ChatWindow({ session, allMessages }) {
             <div className="p-3 bg-white border-t border-slate-200">
                 <TakeoverButton chatId = { session.chat_id } 
                     text = { session.status == status_codes.AGENTE || session.status == status_codes.AGUARDANDO ? "Assumir controle" : "Devolver para IA"} 
-                    newStatus = { session.status == status_codes.AGENTE ? status_codes.HUMANO : status_codes.AGENTE}/>
+                    newStatus = { session.status == status_codes.AGENTE || session.status == status_codes.AGUARDANDO ? status_codes.HUMANO : status_codes.AGENTE}/>
                 
                 
                 <Textbox chatId={session.chat_id} disabled={session.status != status_codes.HUMANO}/>
