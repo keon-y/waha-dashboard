@@ -4,7 +4,7 @@ import TakeoverButton from './TakeoverButton';
 import Textbox from './Textbox';
 import axios from 'axios'
 
-export default function ChatWindow({ session, allMessages }) {
+export default function ChatWindow({ session, allMessages, onFocus }) {
 
     const status_codes = {
         AGENTE: 0,
@@ -32,8 +32,9 @@ export default function ChatWindow({ session, allMessages }) {
         scrollToBottom();
     }, [chatMessages]);
 
+
     return (
-        <div className="flex flex-col bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden h-full">
+        <div className="flex flex-col bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden h-full" onClick={onFocus}>
 
             {/* Cabeçalho */}
             <div className="bg-slate-800 text-white p-4 flex justify-between items-center shadow-sm z-10">

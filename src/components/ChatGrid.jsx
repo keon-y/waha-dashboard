@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ChatWindow from './ChatWindow';
 
-function StatusRow({ title, statusCode, sessions, messages, colorClass }) {
+function StatusRow({ title, statusCode, sessions, messages, colorClass, onFocus }) {
  
   const [isGrid, setIsGrid] = useState(false); 
-  const rowSessions = sessions.filter((session) => session.status === statusCode);
+
+  
+
+  const rowSessions = sessions.filter((session) => session.status === statusCode).sort((a, b) => new Date(b.last_message) - new Date(a.last_message));
 
   if (rowSessions.length === 0) return null;
 
@@ -56,7 +59,7 @@ function StatusRow({ title, statusCode, sessions, messages, colorClass }) {
                 : "h-[500px] min-w-[320px] max-w-[320px] shrink-0 snap-start"
             }`}
           >
-            <ChatWindow session={session} allMessages={messages} />
+            <ChatWindow session={session} allMessages={messages} onFocus={onFocus}/>
           </div>
         ))}
       </div>
@@ -65,6 +68,15 @@ function StatusRow({ title, statusCode, sessions, messages, colorClass }) {
 }
 
 export default function ChatGrid({ sessions, messages }) {
+  const [focused, setFocused] = useState(null); //scrollar para a mensagem, marcar como lido, etc. Poderia ser um context, mas prop drilling aqui não é o fim do mundo
+
+  const onFocus = (event) => {
+    setFocused(event.currentTarget);
+  }
+  useEffect(() => {
+    focused?.scrollIntoView({ behavior: 'smooth' });
+  }, [focused]);
+
   return (
 
     <div className="flex flex-col gap-2 pb-10">
@@ -75,6 +87,7 @@ export default function ChatGrid({ sessions, messages }) {
         statusCode={1} 
         sessions={sessions} 
         messages={messages} 
+        onFocus={onFocus}
         colorClass="text-amber-600" 
       />
       
@@ -82,7 +95,8 @@ export default function ChatGrid({ sessions, messages }) {
         title="Atendimento Humano" 
         statusCode={2} 
         sessions={sessions} 
-        messages={messages} 
+        messages={messages}
+        onFocus={onFocus}
         colorClass="text-emerald-600" 
       />
       
@@ -90,7 +104,8 @@ export default function ChatGrid({ sessions, messages }) {
         title="Em Atendimento (IA)" 
         statusCode={0} 
         sessions={sessions} 
-        messages={messages} 
+        messages={messages}
+        onFocus={onFocus} 
         colorClass="text-blue-600" 
       />
       
@@ -98,7 +113,8 @@ export default function ChatGrid({ sessions, messages }) {
         title="Arquivados" 
         statusCode={3} 
         sessions={sessions} 
-        messages={messages} 
+        messages={messages}
+        onFocus={onFocus} 
         colorClass="text-slate-400" 
       />
       
