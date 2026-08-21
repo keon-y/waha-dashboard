@@ -20,12 +20,12 @@ export default function ChatWindow({ session, allMessages }) {
     // Descer a tela para a mensagem mais recente
     const scrollContainerRef = useRef(null);
     const scrollToBottom = () => {
-    if (scrollContainerRef.current) {
-        scrollContainerRef.current.scrollTo({
-            top: scrollContainerRef.current.scrollHeight,
-            behavior: 'smooth'
-        });
-    }
+        if (scrollContainerRef.current) {
+            scrollContainerRef.current.scrollTo({
+                top: scrollContainerRef.current.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
     };
 
     useEffect(() => {
