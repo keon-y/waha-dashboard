@@ -16,11 +16,13 @@ export default function ChatWindow({ session, allMessages, onFocus }) {
 
     const chatMessages = allMessages.filter(
         (msg) => msg.chat_id === session.chat_id
-    );
+    ).sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
     const unreadMessages = chatMessages.filter(
         (msg) => msg.was_read === false && msg.sent_by_me === false
     )
+
+    let first_unread = false;
 
 
     // Descer a tela para a mensagem mais recente
@@ -42,13 +44,13 @@ export default function ChatWindow({ session, allMessages, onFocus }) {
 
         onFocus(event);
         //marca as mensagens como lidas.
-        const {data, error} = await supabase.from('messages').update({was_read: true}).in('id', unreadMessages.map((val) => val.id));
+        const { data, error } = await supabase.from('messages').update({ was_read: true }).in('id', unreadMessages.map((val) => val.id));
         if (error) {
             console.error(error);
             return;
         }
 
-        
+
     }
 
 
@@ -69,30 +71,28 @@ export default function ChatWindow({ session, allMessages, onFocus }) {
 
             {/* Corpo das Mensagens */}
             <div className="flex-1 p-4 overflow-y-auto bg-slate-50 flex flex-col gap-3 mt-auto" ref={scrollContainerRef}>
-                {chatMessages.filter((val) => val.was_read === true || val.sent_by_me === true).map((msg, index) => (
-                    <MessageBubble key={index} message={msg} />
-                ))}
+                {chatMessages.map((msg, index) => {
+                    const showUnreadDivider = !first_unread && msg.was_read === false && msg.sent_by_me === false;
 
-                {unreadMessages.length > 0 && (
-                    <>
-                        {/* Divisor de mensagens */}
-                        <div className="flex items-center my-4">
-                            <div className="flex-1 border-t border-emerald-600"></div>
-                            <span className="px-3 text-xs font-bold text-emerald-600 bg-slate-50 uppercase tracking-widest rounded-full">
-                                {unreadMessages.length} {unreadMessages.length === 1 ? 'nova mensagem' : 'novas mensagens'}
-                            </span>
-                            <div className="flex-1 border-t border-emerald-600"></div>
-                        </div>
+                    if (showUnreadDivider) {
+                        first_unread = true;
+                        return (
+                            <React.Fragment key={index}>
+                                {/* Divisor de mensagens */}
+                                <div className="flex items-center my-4">
+                                    <div className="flex-1 border-t border-emerald-600"></div>
+                                    <span className="px-3 text-xs font-bold text-emerald-600 bg-slate-50 uppercase tracking-widest rounded-full">
+                                        {unreadMessages.length} {unreadMessages.length === 1 ? 'nova mensagem' : 'novas mensagens'}
+                                    </span>
+                                    <div className="flex-1 border-t border-emerald-600"></div>
+                                </div>
+                                <MessageBubble message={msg} />
+                            </React.Fragment>
+                        );
+                    }
 
-                        {unreadMessages.map((msg, index) => (
-                            <MessageBubble key={index} message={msg} />))
-
-                        }
-                    </>
-                )}
-
-
-
+                    return <MessageBubble key={index} message={msg} />;
+                })}
             </div>
 
             {/* Rodapé: Input e Botões */}
