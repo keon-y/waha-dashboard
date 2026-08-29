@@ -53,7 +53,7 @@ export default function Textbox({chatId, disabled}) {
                         content: message,
                         chat_id: chatId,
                         sent_by_me: true,
-                        was_read: true
+                        status: 'read'
                     });
 
                 });

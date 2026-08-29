@@ -19,7 +19,7 @@ export default function ChatWindow({ session, allMessages, onFocus }) {
     ).sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
     const unreadMessages = chatMessages.filter(
-        (msg) => msg.was_read === false && msg.sent_by_me === false
+        (msg) => msg.status === "unread"
     )
 
     let first_unread = false;
@@ -44,7 +44,7 @@ export default function ChatWindow({ session, allMessages, onFocus }) {
 
         onFocus(event);
         //marca as mensagens como lidas.
-        const { data, error } = await supabase.from('messages').update({ was_read: true }).in('id', unreadMessages.map((val) => val.id));
+        const { data, error } = await supabase.from('messages').update({ status: "read" }).in('id', unreadMessages.map((val) => val.id));
         if (error) {
             console.error(error);
             return;
@@ -72,7 +72,7 @@ export default function ChatWindow({ session, allMessages, onFocus }) {
             {/* Corpo das Mensagens */}
             <div className="flex-1 p-4 overflow-y-auto bg-slate-50 flex flex-col gap-3 mt-auto" ref={scrollContainerRef}>
                 {chatMessages.map((msg, index) => {
-                    const showUnreadDivider = !first_unread && msg.was_read === false && msg.sent_by_me === false;
+                    const showUnreadDivider = !first_unread && msg.status === 'unread' && msg.sent_by_me === false;
 
                     if (showUnreadDivider) {
                         first_unread = true;
